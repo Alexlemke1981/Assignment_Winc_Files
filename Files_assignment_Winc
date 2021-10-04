@@ -1,0 +1,55 @@
+__winc_id__ = 'ae539110d03e49ea8738fd413ac44ba8'
+__human_name__ = 'files'
+
+# Module imports
+import os
+import shutil
+import zipfile
+
+# Definitions of the maplocations
+map = os.getcwd() + "\\" + "files"
+cache_dir = map + "\cache"
+zip_path = map + "\data.zip"
+
+# Part 1: creating a clean cache folder
+
+def clean_cache():
+    if os.path.exists(cache_dir):
+        shutil.rmtree(cache_dir)
+        print("existed_dir : ", dir)
+    else:
+        os.makedirs(cache_dir)
+        print("created_dir : ", cache_dir)
+
+# Part 2: Unpacking the zipfile into the created map    
+
+def cache_zip(zip_path, cache_dir):
+    with zipfile.ZipFile(zip_path, "r") as zip_ref:
+        zip_ref.extractall(cache_dir)
+
+# Part 3: Returning a list of all the files in the cache
+
+def cached_files():
+    cached_files = []
+    for file in os.listdir(cache_dir):
+        cached_files.append(os.path.join(cache_dir, file))
+    return cached_files
+
+# Part 4: Finding the correct password
+
+def find_password(cached_files):
+    finding_pw = 'password'
+    for file in cached_files:
+        f = open(file, "r")
+        for line in f.readlines():
+            password = None
+            if finding_pw in line:
+                password = line.split(": ")[1][:-1]
+                print(password)
+                return password
+
+
+clean_cache()
+cache_zip(zip_path, cache_dir)
+cached_files()
+find_password(cached_files())
